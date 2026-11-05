@@ -1,0 +1,44 @@
+@baseUrl = http://localhost:3000/api/v1/nutrition
+# Valid with .env: JWT_SECRET=replace-with-a-long-random-secret
+@validToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0LXVzZXIiLCJleHAiOjQxMDI0NDQ4MDB9.GYM850-pvbT50Kv9MgL1P2ftAhlsXlGbMgzTaAGVSmE
+
+### Search foods
+GET {{baseUrl}}/search?query=banana&page=1&pageSize=20
+Accept: application/json
+
+### Macro breakdown (Open Food Facts product barcode)
+GET {{baseUrl}}/macro-breakdown/3017620422003?quantityGrams=150
+Accept: application/json
+
+### Create nutrition log - protected request without a token (401)
+POST {{baseUrl}}/logs
+Content-Type: application/json
+
+{
+  "foodId": "3017620422003",
+  "quantityGrams": 150,
+  "mealType": "snack",
+  "consumedAt": "2026-11-04T18:36:58Z"
+}
+
+### Create nutrition log - protected request with a valid JWT (201)
+POST {{baseUrl}}/logs
+Authorization: Bearer {{validToken}}
+Content-Type: application/json
+
+{
+  "foodId": "3017620422003",
+  "quantityGrams": 150,
+  "mealType": "snack",
+  "consumedAt": "2026-11-04T18:36:58Z"
+}
+
+### Invalid protected request - demonstrates clear validation output
+POST {{baseUrl}}/logs
+Authorization: Bearer {{validToken}}
+Content-Type: application/json
+
+{
+  "quantityGrams": -1,
+  "mealType": "midnight"
+}
