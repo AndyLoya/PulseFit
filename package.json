@@ -1,21 +1,13 @@
 {
-  "name": "pulsefit-nutrition-service",
+  "name": "pulsefit-monorepo",
   "version": "1.0.0",
   "private": true,
-  "description": "REST microservice for PulseFit nutrition search, macro calculations, and food logging",
-  "main": "server.js",
+  "workspaces": [
+    "apps/nutrition-api"
+  ],
   "scripts": {
-    "start": "node server.js",
-    "dev": "node --watch server.js",
-    "test": "node --test"
-  },
-  "engines": { "node": ">=18" },
-  "dependencies": {
-    "axios": "^1.7.9",
-    "bcryptjs": "^3.0.2",
-    "dotenv": "^16.4.7",
-    "express": "^4.21.2",
-    "express-rate-limit": "^7.5.0",
-    "jsonwebtoken": "^9.0.2"
+    "api:start": "npm run start --workspace apps/nutrition-api",
+    "api:dev": "npm run dev --workspace apps/nutrition-api",
+    "api:test": "npm test --workspace apps/nutrition-api"
   }
 }
