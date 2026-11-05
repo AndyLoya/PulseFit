@@ -2,6 +2,7 @@ require('dotenv').config();
 
 const express = require('express');
 const nutritionRoutes = require('./src/routes/nutrition.routes');
+const authRoutes = require('./src/routes/auth.routes');
 
 const app = express();
 app.disable('x-powered-by');
@@ -13,6 +14,7 @@ app.get('/', (req, res) => {
     baseUrl: '/api/v1/nutrition'
   });
 });
+app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/nutrition', nutritionRoutes);
 
 app.use((req, res) => {

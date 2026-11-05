@@ -32,6 +32,10 @@ Load the same `.env` secret before running that command in your shell.
 |---|---:|---|---|
 | `PORT` | No | `3000` | HTTP port |
 | `JWT_SECRET` | Yes | None | Secret used to verify Bearer JWTs |
+| DEMO_USERNAME | No | pulsefit-demo | Demo login username |
+| DEMO_PASSWORD_HASH | Yes for login | None | bcrypt hash of demo password |
+| ACCESS_TOKEN_TTL | No | 15m | Access token lifetime |
+| REFRESH_TOKEN_TTL | No | 7d | Refresh token lifetime |
 | `OPEN_FOOD_FACTS_BASE_URL` | No | `https://world.openfoodfacts.org` | Public food provider base URL |
 | `OPEN_FOOD_FACTS_TIMEOUT_MS` | No | `5000` | Provider request timeout in milliseconds |
 | `NODE_ENV` | No | `development` | Runtime environment |
@@ -42,7 +46,7 @@ Load the same `.env` secret before running that command in your shell.
 |---|---|---|---|
 | GET | `/api/v1/nutrition/search?query=banana&page=1&pageSize=20` | None | Search foods. Provider failures return a successful response with an empty result and `fallback: true`. |
 | GET | `/api/v1/nutrition/macro-breakdown/:foodId?quantityGrams=150` | None | Calculate calories and protein, carbohydrate, and fat totals for `quantityGrams` (defaults to 100 g). |
-| POST | `/api/v1/nutrition/logs` | Bearer JWT | Validate and create a nutrition log. |
+| POST | `/api/v1/nutrition/logs` | Bearer JWT| Validate and create a nutrition log. |
 
 ## Validation and errors
 
@@ -62,5 +66,7 @@ Missing/invalid JWTs return HTTP 401, provider failures use safe fallbacks, and 
   "consumedAt": "2026-11-04T18:36:58Z"
 }
 ```
+
+Run automated tests with npm test.
 
 Use [api.http](./api.http) with a compatible REST client for prepared requests.

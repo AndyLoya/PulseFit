@@ -2,6 +2,15 @@
 # Valid with .env: JWT_SECRET=replace-with-a-long-random-secret
 @validToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0LXVzZXIiLCJleHAiOjQxMDI0NDQ4MDB9.GYM850-pvbT50Kv9MgL1P2ftAhlsXlGbMgzTaAGVSmE
 
+### Demo login
+POST http://localhost:3000/api/v1/auth/login
+Content-Type: application/json
+
+{
+  "username": "pulsefit-demo",
+  "password": "pulsefit-demo-password"
+}
+
 ### Search foods
 GET {{baseUrl}}/search?query=banana&page=1&pageSize=20
 Accept: application/json

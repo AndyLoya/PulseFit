@@ -15,7 +15,10 @@ function authenticateJwt(req, res, next) {
 
   const token = authorization.slice(7).trim();
   try {
-    req.user = jwt.verify(token, secret);
+    req.user = jwt.verify(token, secret, { algorithms: ['HS256'] });
+    if (req.user.type === 'refresh') {
+      return res.status(401).json({ error: 'Unauthorized', details: ['An access token is required'] });
+    }
     next();
   } catch (error) {
     return res.status(401).json({ error: 'Unauthorized', details: ['Token is missing, invalid, or expired'] });
