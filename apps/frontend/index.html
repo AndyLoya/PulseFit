@@ -808,7 +808,7 @@
   </div>
 
   <script>
-    const API_BASE = 'http://localhost:3000';
+    const API_BASE = 'http://localhost:3001';
 
     let accessToken = null;
     let refreshToken = null;
@@ -924,7 +924,7 @@
       }
 
       if (path.startsWith('/api/v1/nutrition/search')) {
-        const url = new URL(path, 'http://localhost:3000');
+        const url = new URL(path, 'http://localhost:3001');
         const query = (url.searchParams.get('query') || '').trim();
         if (!query) {
           return { ok: false, status: 400, data: { error: 'Invalid input', details: ['query is required and must be at most 100 characters'] } };
@@ -934,7 +934,7 @@
       }
 
       if (path.startsWith('/api/v1/nutrition/macro-breakdown/')) {
-        const url = new URL(path, 'http://localhost:3000');
+        const url = new URL(path, 'http://localhost:3001');
         const foodId = decodeURIComponent(url.pathname.split('/').pop());
         const grams = Number(url.searchParams.get('quantityGrams') || 100);
         const product = FALLBACK_CATALOG[foodId] || FALLBACK_CATALOG['3017620422003'];

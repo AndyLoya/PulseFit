@@ -42,7 +42,7 @@ Configura `apps/backend/.env` a partir de `apps/backend/.env.example`. Valores p
 PORT=3001
 NUTRITION_API_BASE_URL=http://localhost:3000/api/v1
 NUTRITION_API_TIMEOUT_MS=5000
-CORS_ORIGIN=http://localhost:5173
+CORS_ORIGIN=http://localhost:8080
 ```
 
 `CORS_ORIGIN` debe coincidir con el origen real del frontend. Admite varios orígenes separados por comas.
@@ -179,4 +179,3 @@ Las pruebas actuales usan servicios locales simulados para no depender de Open F
 - El refresh token no tiene revocación persistente.
 - El servicio requiere configuración de secretos y HTTPS en un despliegue real.
 - No asumas que una prueba con proveedor simulado verifica disponibilidad actual de Open Food Facts.
-

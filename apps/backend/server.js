@@ -6,7 +6,7 @@ const nutritionRoutes = require('./src/routes/nutrition.routes');
 const authRoutes = require('./src/routes/auth.routes');
 
 const app = express();
-const allowedOrigins = (process.env.CORS_ORIGIN || 'http://localhost:5173')
+const allowedOrigins = (process.env.CORS_ORIGIN || 'http://localhost:8080')
   .split(',')
   .map(origin => origin.trim())
   .filter(Boolean);

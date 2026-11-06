@@ -32,7 +32,7 @@ The backend defaults to `http://localhost:3001`; the nutrition microservice defa
 | `PORT` | No | `3001` | Backend HTTP port |
 | `NUTRITION_API_BASE_URL` | No | `http://localhost:3000/api/v1` | Nutrition microservice base URL |
 | `NUTRITION_API_TIMEOUT_MS` | No | `5000` | Upstream request timeout |
-| `CORS_ORIGIN` | No | `http://localhost:5173` | Comma-separated allowed frontend origins |
+| `CORS_ORIGIN` | No | `http://localhost:8080` | Comma-separated allowed frontend origins |
 
 ## Endpoints
 

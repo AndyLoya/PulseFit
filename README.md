@@ -47,4 +47,4 @@ The microservice API documentation and REST client collection are in `apps/nutri
 | `npm run backend:test` | Run the backend integration tests |
 | `npm test` | Run all API and backend tests |
 
-The backend integration module is `apps/backend/src/services/nutrition-api.client.js`; it forwards requests to the separately running nutrition microservice. No frontend files are changed by this backend implementation.
+The frontend communicates with the application backend at `http://localhost:3001`; the backend integration module forwards requests to the separately running nutrition microservice at `http://localhost:3000/api/v1`.
