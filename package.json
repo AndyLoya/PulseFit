@@ -3,11 +3,16 @@
   "version": "1.0.0",
   "private": true,
   "workspaces": [
-    "apps/nutrition-api"
+    "apps/nutrition-api",
+    "apps/backend"
   ],
   "scripts": {
     "api:start": "npm run start --workspace apps/nutrition-api",
     "api:dev": "npm run dev --workspace apps/nutrition-api",
-    "api:test": "npm test --workspace apps/nutrition-api"
+    "api:test": "npm test --workspace apps/nutrition-api",
+    "backend:start": "npm run start --workspace apps/backend",
+    "backend:dev": "npm run dev --workspace apps/backend",
+    "backend:test": "npm test --workspace apps/backend",
+    "test": "npm run api:test && npm run backend:test"
   }
 }
