@@ -127,7 +127,7 @@ The current classroom implementation is unable to revoke an issued access token 
 
 ### Frontend token handling
 
-[The frontend](/C:/Users/The_D/OneDrive/Desktop/PulsefitMicro/apps/frontend/index.html) obtains tokens from login and sends the access token in the Bearer header. It currently stores both tokens in JavaScript variables in memory. This avoids `localStorage`, which remains available to scripts and is vulnerable when XSS exists, but memory does not survive a reload and the refresh token is not protected by cookie attributes. Production should keep the access token in memory and place the refresh token in a Secure, HttpOnly, SameSite cookie.
+[The frontend](../apps/frontend/index.html) obtains tokens from login and sends the access token in the Bearer header. It currently stores both tokens in JavaScript variables in memory. This avoids `localStorage`, which remains available to scripts and is vulnerable when XSS exists, but memory does not survive a reload and the refresh token is not protected by cookie attributes. Production should keep the access token in memory and place the refresh token in a Secure, HttpOnly, SameSite cookie.
 
 ## 4. Architecture
 
@@ -205,11 +205,11 @@ Additional HTTPS handling:
 
 The repository contains executable evidence rather than fabricated screenshots:
 
-- [Nutrition authentication tests](/C:/Users/The_D/OneDrive/Desktop/PulsefitMicro/apps/nutrition-api/test/nutrition.test.js) prove login, refresh, authenticated log creation, missing and tampered JWT rejection, validation, and malformed JSON handling.
-- [Backend integration tests](/C:/Users/The_D/OneDrive/Desktop/PulsefitMicro/apps/backend/test/integration.test.js) prove authentication and nutrition requests pass through the application backend and nutrition microservice together.
-- [Nutrition REST collection](/C:/Users/The_D/OneDrive/Desktop/PulsefitMicro/apps/nutrition-api/api.http) contains login, missing-token, valid-token, refresh, invalid-input, and protected-request examples.
-- [Backend REST collection](/C:/Users/The_D/OneDrive/Desktop/PulsefitMicro/apps/backend/api.http) contains frontend-facing routes through port 3001.
-- [JWT implementation guide](/C:/Users/The_D/OneDrive/Desktop/PulsefitMicro/apps/nutrition-api/docs/jwt-guide.md) explains setup and manual verification.
+- [Nutrition authentication tests](../apps/nutrition-api/test/nutrition.test.js) prove login, refresh, authenticated log creation, missing and tampered JWT rejection, validation, and malformed JSON handling.
+- [Backend integration tests](../apps/backend/test/integration.test.js) prove authentication and nutrition requests pass through the application backend and nutrition microservice together.
+- [Nutrition REST collection](../apps/nutrition-api/api.http) contains login, missing-token, valid-token, refresh, invalid-input, and protected-request examples.
+- [Backend REST collection](../apps/backend/api.http) contains frontend-facing routes through port 3001.
+- [JWT implementation guide](../apps/nutrition-api/docs/jwt-guide.md) explains setup and manual verification.
 
 A verified test run should end with no failures:
 
