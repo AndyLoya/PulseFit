@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PulseFit Nutrition — Frontend Standalone &amp; Wearable 3D</title>
+  <title>PulseFit Nutrition — Standalone Frontend &amp; 3D Wearable</title>
   <style>
     :root {
       --bg: #0f172a;
@@ -571,21 +571,21 @@
         <div class="brand-badge">PF</div>
         <div>
           <h1>PulseFit Nutrition</h1>
-          <div class="subtitle">Panel Frontend Independiente &amp; Wearable Sync — Microservicio de Nutrición y JWT</div>
+          <div class="subtitle">Standalone Frontend Dashboard &amp; Wearable Sync — Nutrition Microservice &amp; JWT Auth</div>
         </div>
       </div>
       <div class="status-bar">
         <span id="authDot" class="dot"></span>
-        <span id="authStatusText">Sin sesión activa</span>
+        <span id="authStatusText">No active session</span>
       </div>
     </header>
 
     <div class="hero-showcase">
-      <!-- Render 3D de la Pulsera PulseFit Band -->
+      <!-- 3D PulseFit Band Render -->
       <aside class="device-stage" id="deviceStage">
         <div class="device-stage-header">
           <span class="card-title" style="font-size: 0.95rem;">PulseFit Band Pro</span>
-          <span class="tag public">Live Render 3D</span>
+          <span class="tag public">Live 3D Render</span>
         </div>
 
         <div class="smartband-3d-wrapper" id="smartbandRender">
@@ -594,7 +594,7 @@
             <div class="band-crown"></div>
             <div class="band-screen">
               <div class="watch-top">
-                <span>18:24</span>
+                <span>18:48</span>
                 <span id="watchSyncBadge" class="watch-sync-pill">NO JWT</span>
               </div>
 
@@ -649,92 +649,92 @@
         </div>
 
         <div class="subtitle" style="text-align: center; font-size: 0.78rem;">
-          Mueve el cursor sobre la pulsera para rotar en 3D.
+          Move your cursor over the smartband to tilt in 3D.
         </div>
       </aside>
 
-      <!-- Cuadrícula de los 4 Módulos del Microservicio -->
+      <!-- 4 Microservice Modules Grid -->
       <div class="grid">
-        <!-- 1. Autenticación JWT -->
+        <!-- 1. JWT Authentication -->
         <section class="card">
           <div class="card-header">
-            <h2 class="card-title">1. Autenticación JWT</h2>
+            <h2 class="card-title">1. JWT Authentication</h2>
             <span class="tag auth">POST /api/v1/auth/*</span>
           </div>
 
           <div class="form-row">
             <div class="form-group">
-              <label for="username">Usuario</label>
+              <label for="username">Username</label>
               <input id="username" type="text" value="pulsefit-demo" />
             </div>
             <div class="form-group">
-              <label for="password">Contraseña</label>
+              <label for="password">Password</label>
               <input id="password" type="password" value="pulsefit-demo-password" />
             </div>
           </div>
 
           <div class="btn-row">
-            <button id="loginBtn" class="btn-primary" type="button">Iniciar Sesión</button>
-            <button id="refreshBtn" class="btn-secondary" type="button" disabled>Renovar Token</button>
-            <button id="logoutBtn" class="btn-danger" type="button" disabled>Borrar Token</button>
+            <button id="loginBtn" class="btn-primary" type="button">Sign In</button>
+            <button id="refreshBtn" class="btn-secondary" type="button" disabled>Refresh Token</button>
+            <button id="logoutBtn" class="btn-danger" type="button" disabled>Clear Token</button>
           </div>
 
           <div class="form-group">
-            <label>Claims del Access Token (en memoria)</label>
-            <pre id="tokenPreview">No hay token activo. Inicia sesión para obtener un JWT.</pre>
+            <label>Access Token Claims (in-memory)</label>
+            <pre id="tokenPreview">No active token. Sign in to obtain a JWT.</pre>
           </div>
         </section>
 
-        <!-- 2. Búsqueda de Alimentos -->
+        <!-- 2. Food Search -->
         <section class="card">
           <div class="card-header">
-            <h2 class="card-title">2. Buscar Alimentos</h2>
+            <h2 class="card-title">2. Search Foods</h2>
             <span class="tag public">GET /nutrition/search</span>
           </div>
 
           <div class="form-row">
             <div class="form-group">
-              <label for="searchQuery">Término de búsqueda</label>
-              <input id="searchQuery" type="text" value="banana" placeholder="Ej. banana, oats, yogurt" />
+              <label for="searchQuery">Search query</label>
+              <input id="searchQuery" type="text" value="banana" placeholder="e.g. banana, oats, yogurt" />
             </div>
             <div class="form-group">
-              <label for="searchPageSize">Resultados (pageSize)</label>
+              <label for="searchPageSize">Results (pageSize)</label>
               <input id="searchPageSize" type="number" value="5" min="1" max="50" />
             </div>
           </div>
 
           <div class="btn-row">
-            <button id="searchBtn" class="btn-primary" type="button">Buscar en Open Food Facts</button>
+            <button id="searchBtn" class="btn-primary" type="button">Search Open Food Facts</button>
           </div>
 
           <div id="searchResults" class="product-list">
-            <div class="subtitle">Haz clic en buscar para consultar alimentos.</div>
+            <div class="subtitle">Click search to look up foods.</div>
           </div>
         </section>
 
-        <!-- 3. Calculadora de Macronutrientes -->
+        <!-- 3. Macronutrient Calculator -->
         <section class="card">
           <div class="card-header">
-            <h2 class="card-title">3. Desglose de Macros</h2>
+            <h2 class="card-title">3. Macro Breakdown</h2>
             <span class="tag public">GET /nutrition/macro-breakdown/:id</span>
           </div>
 
           <div class="form-row">
             <div class="form-group">
-              <label for="macroFoodId">Código / Food ID</label>
+              <label for="macroFoodId">Barcode / Food ID</label>
               <input id="macroFoodId" type="text" value="3017620422003" />
             </div>
             <div class="form-group">
-              <label for="macroGrams">Cantidad (gramos)</label>
+              <label for="macroGrams">Quantity (grams)</label>
               <input id="macroGrams" type="number" value="150" min="1" max="10000" />
             </div>
           </div>
 
           <div class="btn-row">
-            <button id="macroBtn" class="btn-primary" type="button">Calcular Macronutrientes</button>
+            <button id="macroBtn" class="btn-primary" type="button">Calculate Macros</button>
           </div>
 
-          <div id="macroFoodTitle" class="subtitle">Producto: —</div>
+          <div id="macroFoodTitle" class="subtitle">Product: —</div>
           <div class="macro-grid">
             <div class="macro-box">
               <div id="valCalories" class="macro-value">—</div>
@@ -742,68 +742,68 @@
             </div>
             <div class="macro-box">
               <div id="valProtein" class="macro-value">—</div>
-              <div class="macro-label">Proteína (g)</div>
+              <div class="macro-label">Protein (g)</div>
             </div>
             <div class="macro-box">
               <div id="valCarbs" class="macro-value">—</div>
-              <div class="macro-label">Carbos (g)</div>
+              <div class="macro-label">Carbs (g)</div>
             </div>
             <div class="macro-box">
               <div id="valFat" class="macro-value">—</div>
-              <div class="macro-label">Grasa (g)</div>
+              <div class="macro-label">Fat (g)</div>
             </div>
           </div>
         </section>
 
-        <!-- 4. Registro de Consumo (Ruta Protegida) -->
+        <!-- 4. Create Nutrition Log (Protected Route) -->
         <section class="card">
           <div class="card-header">
-            <h2 class="card-title">4. Registrar Consumo</h2>
+            <h2 class="card-title">4. Log Food Intake</h2>
             <span class="tag auth">POST /nutrition/logs (JWT)</span>
           </div>
 
           <div class="form-row">
             <div class="form-group">
-              <label for="logFoodId">Código / Food ID</label>
+              <label for="logFoodId">Barcode / Food ID</label>
               <input id="logFoodId" type="text" value="3017620422003" />
             </div>
             <div class="form-group">
-              <label for="logGrams">Cantidad (gramos)</label>
+              <label for="logGrams">Quantity (grams)</label>
               <input id="logGrams" type="number" value="150" min="1" max="10000" />
             </div>
           </div>
 
           <div class="form-group">
-            <label for="logMealType">Tipo de comida (mealType)</label>
+            <label for="logMealType">Meal Type (mealType)</label>
             <select id="logMealType">
-              <option value="breakfast">Desayuno (breakfast)</option>
-              <option value="lunch">Comida (lunch)</option>
-              <option value="dinner">Cena (dinner)</option>
+              <option value="breakfast">Breakfast (breakfast)</option>
+              <option value="lunch">Lunch (lunch)</option>
+              <option value="dinner">Dinner (dinner)</option>
               <option value="snack" selected>Snack (snack)</option>
             </select>
           </div>
 
           <div class="btn-row">
-            <button id="logBtn" class="btn-primary" type="button">Guardar Registro</button>
+            <button id="logBtn" class="btn-primary" type="button">Save Log</button>
           </div>
 
           <div class="form-group">
-            <label>Registros creados en esta sesión</label>
+            <label>Logs created in this session</label>
             <div id="logHistory" class="log-list">
-              <div class="subtitle">Aún no se han registrado alimentos.</div>
+              <div class="subtitle">No food logs recorded yet.</div>
             </div>
           </div>
         </section>
       </div>
     </div>
 
-    <!-- Consola de Respuesta HTTP -->
+    <!-- HTTP Response Console -->
     <section class="card">
       <div class="card-header">
-        <h2 class="card-title">Inspector de Respuesta HTTP</h2>
-        <span id="httpStatusBadge" class="tag">Listo</span>
+        <h2 class="card-title">HTTP Response Inspector</h2>
+        <span id="httpStatusBadge" class="tag">Ready</span>
       </div>
-      <pre id="responseConsole">// Las respuestas JSON del microservicio aparecerán aquí.</pre>
+      <pre id="responseConsole">// Microservice JSON responses will appear here.</pre>
     </section>
   </div>
 
@@ -869,7 +869,7 @@
       if (accessToken) {
         const claims = decodeJwtPayload(accessToken);
         authDot.classList.add('active');
-        authStatusText.textContent = `Autenticado (${claims?.sub || 'usuario'})`;
+        authStatusText.textContent = `Authenticated (${claims?.sub || 'user'})`;
         tokenPreview.textContent = JSON.stringify(claims, null, 2);
         refreshBtn.disabled = !refreshToken;
         logoutBtn.disabled = false;
@@ -877,8 +877,8 @@
         watchSyncBadge.classList.add('synced');
       } else {
         authDot.classList.remove('active');
-        authStatusText.textContent = 'Sin sesión activa';
-        tokenPreview.textContent = 'No hay token activo. Inicia sesión para obtener un JWT.';
+        authStatusText.textContent = 'No active session';
+        tokenPreview.textContent = 'No active token. Sign in to obtain a JWT.';
         refreshBtn.disabled = true;
         logoutBtn.disabled = true;
         watchSyncBadge.textContent = 'NO JWT';
@@ -1017,7 +1017,7 @@
       accessToken = null;
       refreshToken = null;
       updateAuthUI();
-      showResponse('LOCAL', 'session/clear', 200, { message: 'Tokens eliminados de memoria' });
+      showResponse('LOCAL', 'session/clear', 200, { message: 'Tokens cleared from memory' });
     });
 
     // 2. Search Foods
@@ -1025,7 +1025,7 @@
       const query = document.getElementById('searchQuery').value.trim();
       const pageSize = document.getElementById('searchPageSize').value || 5;
       const container = document.getElementById('searchResults');
-      container.innerHTML = '<div class="subtitle">Buscando...</div>';
+      container.innerHTML = '<div class="subtitle">Searching...</div>';
 
       const path = `/api/v1/nutrition/search?query=${encodeURIComponent(query)}&page=1&pageSize=${encodeURIComponent(pageSize)}`;
       const { ok, data } = await apiRequest('GET', path);
@@ -1036,7 +1036,7 @@
       }
 
       if (!data.products || data.products.length === 0) {
-        container.innerHTML = `<div class="subtitle">Sin resultados (fallback: ${data.fallback}). Puedes probar con el código 3017620422003.</div>`;
+        container.innerHTML = `<div class="subtitle">No results found (fallback: ${data.fallback}). Try barcode 3017620422003.</div>`;
         return;
       }
 
@@ -1054,7 +1054,7 @@
 
         const metaEl = document.createElement('div');
         metaEl.className = 'product-meta';
-        metaEl.textContent = `${item.brand || 'Sin marca'} • ID: ${item.foodId}`;
+        metaEl.textContent = `${item.brand || 'Unbranded'} • ID: ${item.foodId}`;
 
         info.appendChild(nameEl);
         info.appendChild(metaEl);
@@ -1062,7 +1062,7 @@
         const selectBtn = document.createElement('button');
         selectBtn.className = 'btn-secondary';
         selectBtn.type = 'button';
-        selectBtn.textContent = 'Seleccionar';
+        selectBtn.textContent = 'Select';
         selectBtn.addEventListener('click', () => {
           document.getElementById('macroFoodId').value = item.foodId;
           document.getElementById('logFoodId').value = item.foodId;
@@ -1082,14 +1082,14 @@
       const { ok, data } = await apiRequest('GET', path);
 
       if (ok && data.macros) {
-        document.getElementById('macroFoodTitle').textContent = `Producto: ${data.name} (${data.quantityGrams}${data.unit})`;
+        document.getElementById('macroFoodTitle').textContent = `Product: ${data.name} (${data.quantityGrams}${data.unit})`;
         document.getElementById('valCalories').textContent = data.macros.calories;
         document.getElementById('valProtein').textContent = data.macros.proteinG;
         document.getElementById('valCarbs').textContent = data.macros.carbsG;
         document.getElementById('valFat').textContent = data.macros.fatG;
         updateWatchMacros(data.macros.calories, data.macros.proteinG, data.macros.carbsG, data.macros.fatG);
       } else {
-        document.getElementById('macroFoodTitle').textContent = `No disponible (${data.error || 'Error'})`;
+        document.getElementById('macroFoodTitle').textContent = `Unavailable (${data.error || 'Error'})`;
         document.getElementById('valCalories').textContent = '—';
         document.getElementById('valProtein').textContent = '—';
         document.getElementById('valCarbs').textContent = '—';
@@ -1117,7 +1117,7 @@
         sessionLogs.forEach(entry => {
           const div = document.createElement('div');
           div.className = 'log-entry';
-          div.textContent = `#${entry.id} • ${entry.mealType.toUpperCase()} • Food ${entry.foodId} (${entry.quantityGrams}g) — Usuario: ${entry.userId}`;
+          div.textContent = `#${entry.id} • ${entry.mealType.toUpperCase()} • Food ${entry.foodId} (${entry.quantityGrams}g) — User: ${entry.userId}`;
           historyEl.appendChild(div);
         });
       }
