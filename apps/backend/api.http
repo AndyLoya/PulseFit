@@ -1,0 +1,38 @@
+@baseUrl = http://localhost:3001/api/v1
+@accessToken = replace-with-access-token-from-login
+
+### Backend health
+GET http://localhost:3001/health
+Accept: application/json
+
+### Login (forwarded to the nutrition microservice)
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "username": "pulsefit-demo",
+  "password": "configure-a-demo-password"
+}
+
+### Search foods
+GET {{baseUrl}}/nutrition/search?query=banana&page=1&pageSize=20
+Accept: application/json
+
+### Calculate macros
+GET {{baseUrl}}/nutrition/macro-breakdown/3017620422003?quantityGrams=150
+Accept: application/json
+
+### Create an authenticated food log
+POST {{baseUrl}}/nutrition/logs
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "foodId": "3017620422003",
+  "quantityGrams": 150,
+  "mealType": "snack"
+}
+
+### Validation error example
+GET {{baseUrl}}/nutrition/search?query=
+Accept: application/json
