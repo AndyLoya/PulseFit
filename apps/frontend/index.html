@@ -808,9 +808,7 @@
   </div>
 
   <script>
-    const API_BASE = window.location.origin.startsWith('http')
-      ? window.location.origin
-      : 'http://localhost:3000';
+    const API_BASE = 'http://localhost:3000';
 
     let accessToken = null;
     let refreshToken = null;
@@ -972,7 +970,7 @@
     async function apiRequest(method, path, body, useAuth = false) {
       const headers = { 'Accept': 'application/json' };
       if (body !== undefined) headers['Content-Type'] = 'application/json';
-      if (useAuth && accessToken) headers['Authorization'] = `Bearer ${accessToken}`;
+      if (useAuth && accessToken) headers['Authorization'] = 'Bearer ' + accessToken;
 
       try {
         const response = await fetch(`${API_BASE}${path}`, {

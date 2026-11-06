@@ -6,6 +6,13 @@ const authRoutes = require('./src/routes/auth.routes');
 
 const app = express();
 app.disable('x-powered-by');
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8080');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS');
+  if (req.method === 'OPTIONS') return res.sendStatus(204);
+  next();
+});
 app.use(express.json({ limit: '100kb' }));
 app.get('/', (req, res) => {
   res.json({
