@@ -1,0 +1,1127 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PulseFit Nutrition — Frontend Standalone &amp; Wearable 3D</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --panel: #1e293b;
+      --panel-alt: #26334d;
+      --border: #334155;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --accent: #10b981;
+      --accent-hover: #059669;
+      --blue: #3b82f6;
+      --amber: #f59e0b;
+      --danger: #ef4444;
+      --radius: 12px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      padding: 24px;
+    }
+
+    .container {
+      max-width: 1240px;
+      margin: 0 auto;
+    }
+
+    header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      padding-bottom: 20px;
+      margin-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-badge {
+      width: 42px;
+      height: 42px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--accent), var(--blue));
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      font-size: 1.2rem;
+      color: #fff;
+      box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35);
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .status-bar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--panel);
+      padding: 8px 14px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      font-size: 0.85rem;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--danger);
+    }
+
+    .dot.active {
+      background: var(--accent);
+      box-shadow: 0 0 8px var(--accent);
+    }
+
+    /* Hero Layout: 3D PulseFit Render + Main Controls */
+    .hero-showcase {
+      display: grid;
+      grid-template-columns: 340px 1fr;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+
+    @media (max-width: 900px) {
+      .hero-showcase {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* 3D PulseFit Smartband Render Card */
+    .device-stage {
+      background: radial-gradient(circle at 50% 35%, rgba(16, 185, 129, 0.16), rgba(15, 23, 42, 0.95) 70%);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+      perspective: 900px;
+    }
+
+    .device-stage-header {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 2;
+    }
+
+    .smartband-3d-wrapper {
+      position: relative;
+      padding: 18px 0;
+      transform-style: preserve-3d;
+      transition: transform 0.25s ease-out;
+      cursor: grab;
+    }
+
+    /* Straps */
+    .band-strap-top,
+    .band-strap-bottom {
+      width: 106px;
+      height: 58px;
+      margin: 0 auto;
+      background: repeating-linear-gradient(
+        180deg,
+        #1e293b 0px,
+        #1e293b 6px,
+        #0f172a 6px,
+        #0f172a 10px
+      );
+      border-left: 3px solid #334155;
+      border-right: 3px solid #1e293b;
+      box-shadow: inset 0 0 18px rgba(0, 0, 0, 0.8);
+    }
+
+    .band-strap-top {
+      border-radius: 26px 26px 4px 4px;
+      transform: perspective(200px) rotateX(18deg);
+      margin-bottom: -6px;
+    }
+
+    .band-strap-bottom {
+      border-radius: 4px 4px 26px 26px;
+      transform: perspective(200px) rotateX(-18deg);
+      margin-top: -6px;
+    }
+
+    /* Titanium Case & Curved OLED Screen */
+    .band-case {
+      width: 186px;
+      height: 256px;
+      border-radius: 44px;
+      padding: 8px;
+      background: linear-gradient(145deg, #64748b 0%, #334155 35%, #0f172a 70%, #475569 100%);
+      box-shadow:
+        -12px 18px 32px rgba(0, 0, 0, 0.7),
+        0 0 24px rgba(16, 185, 129, 0.22),
+        inset 0 2px 3px rgba(255, 255, 255, 0.35);
+      position: relative;
+      z-index: 2;
+    }
+
+    /* Crown Button */
+    .band-crown {
+      position: absolute;
+      right: -7px;
+      top: 72px;
+      width: 7px;
+      height: 36px;
+      border-radius: 0 5px 5px 0;
+      background: linear-gradient(180deg, #10b981, #047857);
+      box-shadow: 0 0 8px rgba(16, 185, 129, 0.6);
+    }
+
+    .band-screen {
+      width: 100%;
+      height: 100%;
+      border-radius: 36px;
+      background: linear-gradient(180deg, #040914 0%, #091326 100%);
+      border: 2px solid #0f172a;
+      padding: 14px 12px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Glass Glare Overlay */
+    .band-screen::after {
+      content: "";
+      position: absolute;
+      top: -30%;
+      left: -40%;
+      width: 140%;
+      height: 75%;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0) 60%);
+      transform: rotate(-18deg);
+      pointer-events: none;
+    }
+
+    .watch-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.7rem;
+      color: var(--muted);
+    }
+
+    .watch-sync-pill {
+      padding: 2px 6px;
+      border-radius: 999px;
+      font-size: 0.65rem;
+      font-weight: 700;
+      background: rgba(239, 68, 68, 0.18);
+      color: #fca5a5;
+    }
+
+    .watch-sync-pill.synced {
+      background: rgba(16, 185, 129, 0.2);
+      color: #6ee7b7;
+    }
+
+    .watch-ring-box {
+      position: relative;
+      width: 108px;
+      height: 108px;
+      margin: 0 auto;
+      display: grid;
+      place-items: center;
+    }
+
+    .watch-ring-svg {
+      width: 108px;
+      height: 108px;
+      transform: rotate(-90deg);
+    }
+
+    .watch-ring-bg {
+      fill: none;
+      stroke: #1e293b;
+      stroke-width: 8;
+    }
+
+    .watch-ring-fg {
+      fill: none;
+      stroke: url(#pulseGradient);
+      stroke-width: 8;
+      stroke-linecap: round;
+      stroke-dasharray: 276;
+      stroke-dashoffset: 165;
+      transition: stroke-dashoffset 0.5s ease;
+    }
+
+    .watch-ring-center {
+      position: absolute;
+      text-align: center;
+    }
+
+    .watch-kcal-val {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: #fff;
+      line-height: 1.1;
+    }
+
+    .watch-kcal-lbl {
+      font-size: 0.68rem;
+      color: var(--accent);
+      font-weight: 600;
+      letter-spacing: 0.04em;
+    }
+
+    /* Animated Pulse Wave */
+    .watch-pulse-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.04);
+      padding: 5px 8px;
+      border-radius: 10px;
+    }
+
+    .pulse-heart {
+      color: #f43f5e;
+      font-size: 0.85rem;
+      animation: heartbeat 1.1s infinite ease-in-out;
+    }
+
+    @keyframes heartbeat {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.25); }
+    }
+
+    .watch-macros-mini {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 4px;
+      text-align: center;
+      font-size: 0.68rem;
+    }
+
+    .watch-macro-pill {
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(51, 65, 85, 0.7);
+      border-radius: 8px;
+      padding: 3px 2px;
+    }
+
+    .watch-macro-pill strong {
+      display: block;
+      color: #fff;
+      font-size: 0.74rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 18px;
+    }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 13px;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card-title {
+      font-size: 1.05rem;
+      font-weight: 600;
+    }
+
+    .tag {
+      font-size: 0.74rem;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: var(--panel-alt);
+      color: var(--muted);
+      border: 1px solid var(--border);
+    }
+
+    .tag.auth {
+      color: var(--amber);
+      border-color: rgba(245, 158, 11, 0.4);
+    }
+
+    .tag.public {
+      color: var(--accent);
+      border-color: rgba(16, 185, 129, 0.4);
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    label {
+      font-size: 0.8rem;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 8px 11px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text);
+      font-size: 0.9rem;
+    }
+
+    input:focus, select:focus {
+      outline: 2px solid var(--accent);
+      border-color: transparent;
+    }
+
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    button {
+      cursor: pointer;
+      border: none;
+      border-radius: 8px;
+      padding: 8px 13px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      transition: background 0.15s, opacity 0.15s;
+    }
+
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #052e16;
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      background: var(--accent-hover);
+      color: #fff;
+    }
+
+    .btn-secondary {
+      background: var(--panel-alt);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .btn-secondary:hover:not(:disabled) {
+      background: var(--border);
+    }
+
+    .btn-danger {
+      background: rgba(239, 68, 68, 0.15);
+      color: #fca5a5;
+      border: 1px solid rgba(239, 68, 68, 0.35);
+    }
+
+    .macro-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+
+    .macro-box {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 8px;
+      text-align: center;
+    }
+
+    .macro-value {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .macro-label {
+      font-size: 0.74rem;
+      color: var(--muted);
+    }
+
+    .product-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 220px;
+      overflow-y: auto;
+    }
+
+    .product-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 11px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+
+    .product-info {
+      min-width: 0;
+    }
+
+    .product-name {
+      font-weight: 600;
+      font-size: 0.88rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .product-meta {
+      font-size: 0.76rem;
+      color: var(--muted);
+    }
+
+    pre {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 11px;
+      font-size: 0.78rem;
+      color: #cbd5e1;
+      overflow-x: auto;
+      max-height: 200px;
+    }
+
+    .log-list {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      max-height: 180px;
+      overflow-y: auto;
+    }
+
+    .log-entry {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--accent);
+      padding: 8px 11px;
+      border-radius: 6px;
+      font-size: 0.82rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="brand">
+        <div class="brand-badge">PF</div>
+        <div>
+          <h1>PulseFit Nutrition</h1>
+          <div class="subtitle">Panel Frontend Independiente &amp; Wearable Sync — Microservicio de Nutrición y JWT</div>
+        </div>
+      </div>
+      <div class="status-bar">
+        <span id="authDot" class="dot"></span>
+        <span id="authStatusText">Sin sesión activa</span>
+      </div>
+    </header>
+
+    <div class="hero-showcase">
+      <!-- Render 3D de la Pulsera PulseFit Band -->
+      <aside class="device-stage" id="deviceStage">
+        <div class="device-stage-header">
+          <span class="card-title" style="font-size: 0.95rem;">PulseFit Band Pro</span>
+          <span class="tag public">Live Render 3D</span>
+        </div>
+
+        <div class="smartband-3d-wrapper" id="smartbandRender">
+          <div class="band-strap-top"></div>
+          <div class="band-case">
+            <div class="band-crown"></div>
+            <div class="band-screen">
+              <div class="watch-top">
+                <span>18:24</span>
+                <span id="watchSyncBadge" class="watch-sync-pill">NO JWT</span>
+              </div>
+
+              <div class="watch-ring-box">
+                <svg class="watch-ring-svg" viewBox="0 0 100 100">
+                  <defs>
+                    <linearGradient id="pulseGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stop-color="#10b981" />
+                      <stop offset="100%" stop-color="#3b82f6" />
+                    </linearGradient>
+                  </defs>
+                  <circle class="watch-ring-bg" cx="50" cy="50" r="44" />
+                  <circle id="watchRingCircle" class="watch-ring-fg" cx="50" cy="50" r="44" />
+                </svg>
+                <div class="watch-ring-center">
+                  <div id="watchKcal" class="watch-kcal-val">809</div>
+                  <div class="watch-kcal-lbl">KCAL</div>
+                </div>
+              </div>
+
+              <div class="watch-pulse-row">
+                <span class="pulse-heart">♥</span>
+                <svg width="78" height="20" viewBox="0 0 78 20" fill="none">
+                  <polyline
+                    points="0,10 14,10 19,3 24,17 29,6 34,13 39,10 54,10 59,2 64,18 69,10 78,10"
+                    stroke="#10b981"
+                    stroke-width="1.8"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+                <span style="font-size: 0.72rem; font-weight: 700; color: #f8fafc;">74 BPM</span>
+              </div>
+
+              <div class="watch-macros-mini">
+                <div class="watch-macro-pill">
+                  <span style="color: #94a3b8;">PROT</span>
+                  <strong id="watchProt">9.5g</strong>
+                </div>
+                <div class="watch-macro-pill">
+                  <span style="color: #94a3b8;">CARB</span>
+                  <strong id="watchCarb">86g</strong>
+                </div>
+                <div class="watch-macro-pill">
+                  <span style="color: #94a3b8;">FAT</span>
+                  <strong id="watchFat">46g</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="band-strap-bottom"></div>
+        </div>
+
+        <div class="subtitle" style="text-align: center; font-size: 0.78rem;">
+          Mueve el cursor sobre la pulsera para rotar en 3D.
+        </div>
+      </aside>
+
+      <!-- Cuadrícula de los 4 Módulos del Microservicio -->
+      <div class="grid">
+        <!-- 1. Autenticación JWT -->
+        <section class="card">
+          <div class="card-header">
+            <h2 class="card-title">1. Autenticación JWT</h2>
+            <span class="tag auth">POST /api/v1/auth/*</span>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="username">Usuario</label>
+              <input id="username" type="text" value="pulsefit-demo" />
+            </div>
+            <div class="form-group">
+              <label for="password">Contraseña</label>
+              <input id="password" type="password" value="pulsefit-demo-password" />
+            </div>
+          </div>
+
+          <div class="btn-row">
+            <button id="loginBtn" class="btn-primary" type="button">Iniciar Sesión</button>
+            <button id="refreshBtn" class="btn-secondary" type="button" disabled>Renovar Token</button>
+            <button id="logoutBtn" class="btn-danger" type="button" disabled>Borrar Token</button>
+          </div>
+
+          <div class="form-group">
+            <label>Claims del Access Token (en memoria)</label>
+            <pre id="tokenPreview">No hay token activo. Inicia sesión para obtener un JWT.</pre>
+          </div>
+        </section>
+
+        <!-- 2. Búsqueda de Alimentos -->
+        <section class="card">
+          <div class="card-header">
+            <h2 class="card-title">2. Buscar Alimentos</h2>
+            <span class="tag public">GET /nutrition/search</span>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="searchQuery">Término de búsqueda</label>
+              <input id="searchQuery" type="text" value="banana" placeholder="Ej. banana, oats, yogurt" />
+            </div>
+            <div class="form-group">
+              <label for="searchPageSize">Resultados (pageSize)</label>
+              <input id="searchPageSize" type="number" value="5" min="1" max="50" />
+            </div>
+          </div>
+
+          <div class="btn-row">
+            <button id="searchBtn" class="btn-primary" type="button">Buscar en Open Food Facts</button>
+          </div>
+
+          <div id="searchResults" class="product-list">
+            <div class="subtitle">Haz clic en buscar para consultar alimentos.</div>
+          </div>
+        </section>
+
+        <!-- 3. Calculadora de Macronutrientes -->
+        <section class="card">
+          <div class="card-header">
+            <h2 class="card-title">3. Desglose de Macros</h2>
+            <span class="tag public">GET /nutrition/macro-breakdown/:id</span>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="macroFoodId">Código / Food ID</label>
+              <input id="macroFoodId" type="text" value="3017620422003" />
+            </div>
+            <div class="form-group">
+              <label for="macroGrams">Cantidad (gramos)</label>
+              <input id="macroGrams" type="number" value="150" min="1" max="10000" />
+            </div>
+          </div>
+
+          <div class="btn-row">
+            <button id="macroBtn" class="btn-primary" type="button">Calcular Macronutrientes</button>
+          </div>
+
+          <div id="macroFoodTitle" class="subtitle">Producto: —</div>
+          <div class="macro-grid">
+            <div class="macro-box">
+              <div id="valCalories" class="macro-value">—</div>
+              <div class="macro-label">kcal</div>
+            </div>
+            <div class="macro-box">
+              <div id="valProtein" class="macro-value">—</div>
+              <div class="macro-label">Proteína (g)</div>
+            </div>
+            <div class="macro-box">
+              <div id="valCarbs" class="macro-value">—</div>
+              <div class="macro-label">Carbos (g)</div>
+            </div>
+            <div class="macro-box">
+              <div id="valFat" class="macro-value">—</div>
+              <div class="macro-label">Grasa (g)</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 4. Registro de Consumo (Ruta Protegida) -->
+        <section class="card">
+          <div class="card-header">
+            <h2 class="card-title">4. Registrar Consumo</h2>
+            <span class="tag auth">POST /nutrition/logs (JWT)</span>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="logFoodId">Código / Food ID</label>
+              <input id="logFoodId" type="text" value="3017620422003" />
+            </div>
+            <div class="form-group">
+              <label for="logGrams">Cantidad (gramos)</label>
+              <input id="logGrams" type="number" value="150" min="1" max="10000" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="logMealType">Tipo de comida (mealType)</label>
+            <select id="logMealType">
+              <option value="breakfast">Desayuno (breakfast)</option>
+              <option value="lunch">Comida (lunch)</option>
+              <option value="dinner">Cena (dinner)</option>
+              <option value="snack" selected>Snack (snack)</option>
+            </select>
+          </div>
+
+          <div class="btn-row">
+            <button id="logBtn" class="btn-primary" type="button">Guardar Registro</button>
+          </div>
+
+          <div class="form-group">
+            <label>Registros creados en esta sesión</label>
+            <div id="logHistory" class="log-list">
+              <div class="subtitle">Aún no se han registrado alimentos.</div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- Consola de Respuesta HTTP -->
+    <section class="card">
+      <div class="card-header">
+        <h2 class="card-title">Inspector de Respuesta HTTP</h2>
+        <span id="httpStatusBadge" class="tag">Listo</span>
+      </div>
+      <pre id="responseConsole">// Las respuestas JSON del microservicio aparecerán aquí.</pre>
+    </section>
+  </div>
+
+  <script>
+    const API_BASE = window.location.origin.startsWith('http')
+      ? window.location.origin
+      : 'http://localhost:3000';
+
+    let accessToken = null;
+    let refreshToken = null;
+    let localLogSeq = 0;
+    const sessionLogs = [];
+
+    const FALLBACK_CATALOG = {
+      '3017620422003': { foodId: '3017620422003', name: 'Nutella Hazelnut Spread', brand: 'Ferrero', per100g: { calories: 539, proteinG: 6.3, carbsG: 57.5, fatG: 30.9 } },
+      '0041220576920': { foodId: '0041220576920', name: 'Organic Banana', brand: 'Fresh Market', per100g: { calories: 89, proteinG: 1.1, carbsG: 22.8, fatG: 0.3 } },
+      '0030000010204': { foodId: '0030000010204', name: 'Rolled Oats 100% Whole Grain', brand: 'Quaker', per100g: { calories: 379, proteinG: 13.2, carbsG: 67.7, fatG: 6.5 } }
+    };
+
+    const authDot = document.getElementById('authDot');
+    const authStatusText = document.getElementById('authStatusText');
+    const tokenPreview = document.getElementById('tokenPreview');
+    const refreshBtn = document.getElementById('refreshBtn');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const responseConsole = document.getElementById('responseConsole');
+    const httpStatusBadge = document.getElementById('httpStatusBadge');
+    const watchSyncBadge = document.getElementById('watchSyncBadge');
+
+    // Interactive 3D tilt on mouse move over the device stage
+    const deviceStage = document.getElementById('deviceStage');
+    const smartbandRender = document.getElementById('smartbandRender');
+    deviceStage.addEventListener('mousemove', e => {
+      const rect = deviceStage.getBoundingClientRect();
+      const x = (e.clientX - rect.left) / rect.width - 0.5;
+      const y = (e.clientY - rect.top) / rect.height - 0.5;
+      smartbandRender.style.transform = `rotateY(${x * 24}deg) rotateX(${-y * 18}deg)`;
+    });
+    deviceStage.addEventListener('mouseleave', () => {
+      smartbandRender.style.transform = 'rotateY(0deg) rotateX(0deg)';
+    });
+
+    function updateWatchMacros(calories, proteinG, carbsG, fatG) {
+      document.getElementById('watchKcal').textContent = Math.round(calories);
+      document.getElementById('watchProt').textContent = `${Math.round(proteinG)}g`;
+      document.getElementById('watchCarb').textContent = `${Math.round(carbsG)}g`;
+      document.getElementById('watchFat').textContent = `${Math.round(fatG)}g`;
+      const circumference = 276;
+      const ratio = Math.min(1, Math.max(0.08, calories / 2000));
+      document.getElementById('watchRingCircle').style.strokeDashoffset = String(Math.round(circumference * (1 - ratio)));
+    }
+
+    function decodeJwtPayload(token) {
+      try {
+        const base64Url = token.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        return JSON.parse(atob(base64));
+      } catch {
+        return null;
+      }
+    }
+
+    function updateAuthUI() {
+      if (accessToken) {
+        const claims = decodeJwtPayload(accessToken);
+        authDot.classList.add('active');
+        authStatusText.textContent = `Autenticado (${claims?.sub || 'usuario'})`;
+        tokenPreview.textContent = JSON.stringify(claims, null, 2);
+        refreshBtn.disabled = !refreshToken;
+        logoutBtn.disabled = false;
+        watchSyncBadge.textContent = 'JWT OK';
+        watchSyncBadge.classList.add('synced');
+      } else {
+        authDot.classList.remove('active');
+        authStatusText.textContent = 'Sin sesión activa';
+        tokenPreview.textContent = 'No hay token activo. Inicia sesión para obtener un JWT.';
+        refreshBtn.disabled = true;
+        logoutBtn.disabled = true;
+        watchSyncBadge.textContent = 'NO JWT';
+        watchSyncBadge.classList.remove('synced');
+      }
+    }
+
+    function showResponse(method, path, status, data) {
+      httpStatusBadge.textContent = `${method} ${path} → HTTP ${status}`;
+      responseConsole.textContent = JSON.stringify(data, null, 2);
+    }
+
+    // Simulated response fallback when opened directly via file:// without modifying server.js
+    function simulateLocalApi(method, path, body, useAuth) {
+      if (path === '/api/v1/auth/login') {
+        if (body?.username !== 'pulsefit-demo' || body?.password !== 'pulsefit-demo-password') {
+          return { ok: false, status: 401, data: { error: 'Unauthorized', details: ['Invalid username or password'] } };
+        }
+        const now = Math.floor(Date.now() / 1000);
+        const claims = { sub: body.username, type: 'access', iat: now, exp: now + 900 };
+        return {
+          ok: true,
+          status: 200,
+          data: {
+            accessToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.' + btoa(JSON.stringify(claims)) + '.standaloneSig',
+            refreshToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.refreshPayload.standaloneSig',
+            tokenType: 'Bearer',
+            expiresIn: '15m'
+          }
+        };
+      }
+
+      if (path === '/api/v1/auth/refresh') {
+        const now = Math.floor(Date.now() / 1000);
+        const claims = { sub: 'pulsefit-demo', type: 'access', iat: now, exp: now + 900 };
+        return {
+          ok: true,
+          status: 200,
+          data: {
+            accessToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.' + btoa(JSON.stringify(claims)) + '.refreshedSig',
+            tokenType: 'Bearer',
+            expiresIn: '15m'
+          }
+        };
+      }
+
+      if (path.startsWith('/api/v1/nutrition/search')) {
+        const url = new URL(path, 'http://localhost:3000');
+        const query = (url.searchParams.get('query') || '').trim();
+        if (!query) {
+          return { ok: false, status: 400, data: { error: 'Invalid input', details: ['query is required and must be at most 100 characters'] } };
+        }
+        const products = Object.values(FALLBACK_CATALOG).map(p => ({ foodId: p.foodId, name: p.name, brand: p.brand, imageUrl: null }));
+        return { ok: true, status: 200, data: { query, source: 'Open Food Facts', count: products.length, products, fallback: false } };
+      }
+
+      if (path.startsWith('/api/v1/nutrition/macro-breakdown/')) {
+        const url = new URL(path, 'http://localhost:3000');
+        const foodId = decodeURIComponent(url.pathname.split('/').pop());
+        const grams = Number(url.searchParams.get('quantityGrams') || 100);
+        const product = FALLBACK_CATALOG[foodId] || FALLBACK_CATALOG['3017620422003'];
+        const factor = grams / 100;
+        const macros = {
+          calories: Number((product.per100g.calories * factor).toFixed(2)),
+          proteinG: Number((product.per100g.proteinG * factor).toFixed(2)),
+          carbsG: Number((product.per100g.carbsG * factor).toFixed(2)),
+          fatG: Number((product.per100g.fatG * factor).toFixed(2))
+        };
+        return { ok: true, status: 200, data: { foodId: product.foodId, name: product.name, quantityGrams: grams, unit: 'g', macros } };
+      }
+
+      if (path === '/api/v1/nutrition/logs') {
+        if (!useAuth || !accessToken) {
+          return { ok: false, status: 401, data: { error: 'Unauthorized', details: ['A Bearer token is required'] } };
+        }
+        const log = {
+          id: ++localLogSeq,
+          userId: 'pulsefit-demo',
+          foodId: body.foodId,
+          quantityGrams: body.quantityGrams,
+          mealType: body.mealType,
+          consumedAt: new Date().toISOString(),
+          createdAt: new Date().toISOString()
+        };
+        return { ok: true, status: 201, data: { message: 'Food log created', log } };
+      }
+
+      return { ok: false, status: 404, data: { error: 'Not found' } };
+    }
+
+    async function apiRequest(method, path, body, useAuth = false) {
+      const headers = { 'Accept': 'application/json' };
+      if (body !== undefined) headers['Content-Type'] = 'application/json';
+      if (useAuth && accessToken) headers['Authorization'] = `Bearer ${accessToken}`;
+
+      try {
+        const response = await fetch(`${API_BASE}${path}`, {
+          method,
+          headers,
+          body: body !== undefined ? JSON.stringify(body) : undefined
+        });
+        const data = await response.json().catch(() => ({}));
+        showResponse(method, path, response.status, data);
+        return { ok: response.ok, status: response.status, data };
+      } catch {
+        const sim = simulateLocalApi(method, path, body, useAuth);
+        showResponse(method, path, `${sim.status} (Standalone)`, sim.data);
+        return sim;
+      }
+    }
+
+    // 1. Login
+    document.getElementById('loginBtn').addEventListener('click', async () => {
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value;
+      const { ok, data } = await apiRequest('POST', '/api/v1/auth/login', { username, password });
+      if (ok && data.accessToken) {
+        accessToken = data.accessToken;
+        refreshToken = data.refreshToken || null;
+        updateAuthUI();
+      }
+    });
+
+    // Refresh
+    refreshBtn.addEventListener('click', async () => {
+      if (!refreshToken) return;
+      const { ok, data } = await apiRequest('POST', '/api/v1/auth/refresh', { refreshToken });
+      if (ok && data.accessToken) {
+        accessToken = data.accessToken;
+        updateAuthUI();
+      }
+    });
+
+    // Logout
+    logoutBtn.addEventListener('click', () => {
+      accessToken = null;
+      refreshToken = null;
+      updateAuthUI();
+      showResponse('LOCAL', 'session/clear', 200, { message: 'Tokens eliminados de memoria' });
+    });
+
+    // 2. Search Foods
+    document.getElementById('searchBtn').addEventListener('click', async () => {
+      const query = document.getElementById('searchQuery').value.trim();
+      const pageSize = document.getElementById('searchPageSize').value || 5;
+      const container = document.getElementById('searchResults');
+      container.innerHTML = '<div class="subtitle">Buscando...</div>';
+
+      const path = `/api/v1/nutrition/search?query=${encodeURIComponent(query)}&page=1&pageSize=${encodeURIComponent(pageSize)}`;
+      const { ok, data } = await apiRequest('GET', path);
+
+      if (!ok) {
+        container.innerHTML = `<div class="subtitle">Error: ${(data.details || [data.error]).join(', ')}</div>`;
+        return;
+      }
+
+      if (!data.products || data.products.length === 0) {
+        container.innerHTML = `<div class="subtitle">Sin resultados (fallback: ${data.fallback}). Puedes probar con el código 3017620422003.</div>`;
+        return;
+      }
+
+      container.innerHTML = '';
+      data.products.forEach(item => {
+        const row = document.createElement('div');
+        row.className = 'product-item';
+
+        const info = document.createElement('div');
+        info.className = 'product-info';
+
+        const nameEl = document.createElement('div');
+        nameEl.className = 'product-name';
+        nameEl.textContent = item.name;
+
+        const metaEl = document.createElement('div');
+        metaEl.className = 'product-meta';
+        metaEl.textContent = `${item.brand || 'Sin marca'} • ID: ${item.foodId}`;
+
+        info.appendChild(nameEl);
+        info.appendChild(metaEl);
+
+        const selectBtn = document.createElement('button');
+        selectBtn.className = 'btn-secondary';
+        selectBtn.type = 'button';
+        selectBtn.textContent = 'Seleccionar';
+        selectBtn.addEventListener('click', () => {
+          document.getElementById('macroFoodId').value = item.foodId;
+          document.getElementById('logFoodId').value = item.foodId;
+        });
+
+        row.appendChild(info);
+        row.appendChild(selectBtn);
+        container.appendChild(row);
+      });
+    });
+
+    // 3. Macro Breakdown
+    document.getElementById('macroBtn').addEventListener('click', async () => {
+      const foodId = document.getElementById('macroFoodId').value.trim();
+      const grams = document.getElementById('macroGrams').value;
+      const path = `/api/v1/nutrition/macro-breakdown/${encodeURIComponent(foodId)}?quantityGrams=${encodeURIComponent(grams)}`;
+      const { ok, data } = await apiRequest('GET', path);
+
+      if (ok && data.macros) {
+        document.getElementById('macroFoodTitle').textContent = `Producto: ${data.name} (${data.quantityGrams}${data.unit})`;
+        document.getElementById('valCalories').textContent = data.macros.calories;
+        document.getElementById('valProtein').textContent = data.macros.proteinG;
+        document.getElementById('valCarbs').textContent = data.macros.carbsG;
+        document.getElementById('valFat').textContent = data.macros.fatG;
+        updateWatchMacros(data.macros.calories, data.macros.proteinG, data.macros.carbsG, data.macros.fatG);
+      } else {
+        document.getElementById('macroFoodTitle').textContent = `No disponible (${data.error || 'Error'})`;
+        document.getElementById('valCalories').textContent = '—';
+        document.getElementById('valProtein').textContent = '—';
+        document.getElementById('valCarbs').textContent = '—';
+        document.getElementById('valFat').textContent = '—';
+      }
+    });
+
+    // 4. Create Nutrition Log
+    document.getElementById('logBtn').addEventListener('click', async () => {
+      const foodId = document.getElementById('logFoodId').value.trim();
+      const quantityGrams = Number(document.getElementById('logGrams').value);
+      const mealType = document.getElementById('logMealType').value;
+
+      const { ok, data } = await apiRequest(
+        'POST',
+        '/api/v1/nutrition/logs',
+        { foodId, quantityGrams, mealType },
+        true
+      );
+
+      if (ok && data.log) {
+        sessionLogs.unshift(data.log);
+        const historyEl = document.getElementById('logHistory');
+        historyEl.innerHTML = '';
+        sessionLogs.forEach(entry => {
+          const div = document.createElement('div');
+          div.className = 'log-entry';
+          div.textContent = `#${entry.id} • ${entry.mealType.toUpperCase()} • Food ${entry.foodId} (${entry.quantityGrams}g) — Usuario: ${entry.userId}`;
+          historyEl.appendChild(div);
+        });
+      }
+    });
+  </script>
+</body>
+</html>
